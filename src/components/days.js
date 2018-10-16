@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import ShowList from './showlist';
-import AddModal from './addmodal';
 
 export default class Days extends Component {
   render() {
