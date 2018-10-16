@@ -1,55 +1,26 @@
 import React, { Component } from 'react';
-import { Accordion, Panel } from 'react-bootstrap';
 import ShowList from './showlist';
 import AddModal from './addmodal';
 
 export default class Days extends Component {
-  constructor(props) {
-    super(props);
-
-    if (JSON.parse(localStorage.getItem('_user_shows')) === null) {
-      this.state = {
-        mon: [],
-        tue: [],
-        wed: [],
-        thur: [],
-        fri: [],
-        sat: [],
-        sun: [],
-      };
-    } else {
-      this.state = JSON.parse(localStorage.getItem('_user_shows'));
-    }
-  }
-
-  addShow = (day, title, time, meridiem) => {
-    let on = this.state[day];
-    on.push({
-      title,
-      time,
-      meridiem,
-    });
-    this.setState({ [day]: on }, this.setStorage);
-  };
-
-  handleDelete = (day, title) => {
-    let on = this.state[day];
-    let index = on.findIndex(x => x.title === title);
-    on.splice(index, 1);
-    this.setState({ [on]: on }, this.setStorage);
-  };
-
-  setStorage = () => {
-    localStorage.setItem('_user_shows', JSON.stringify(this.state));
-  };
-
   render() {
-    let { mon, tue, wed, thur, fri, sat, sun } = this.state;
+    const { mon, tue, wed, thu, fri, sat, sun } = this.props.days;
     return (
-      <div className="Days">
-        <AddModal addShow={this.addShow} />
-        <div className="card">
-          <div className="card-title">Days</div>
+      <div className="row">
+        <div className="col-md-4 col-xs-12">
+          <div className="card">
+            <ul className="list-group">
+              <li className="list-group-item">Sunday - {sun.length} shows</li>
+              <li className="list-group-item">Monday - {mon.length} shows</li>
+              <li className="list-group-item">Tuesday - {tue.length} shows</li>
+              <li className="list-group-item">
+                Wednesday - {wed.length} shows
+              </li>
+              <li className="list-group-item">Thursday - {thu.length} shows</li>
+              <li className="list-group-item">Friday - {fri.length} shows</li>
+              <li className="list-group-item">Saturday - {sat.length} shows</li>
+            </ul>
+          </div>
         </div>
       </div>
     );
