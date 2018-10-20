@@ -5,8 +5,6 @@ import Days from './components/Days';
 import AddModal from './components/AddModal';
 import ShowList from './components/ShowList';
 
-import './App.css';
-
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -63,6 +61,21 @@ export default class App extends Component {
     }));
   };
 
+  removeAll = () =>
+    this.setState(
+      {
+        sun: [],
+        mon: [],
+        tue: [],
+        wed: [],
+        thu: [],
+        fri: [],
+        sat: [],
+        selectedDay: { day: null, shows: [] },
+      },
+      this.setStorage
+    );
+
   render() {
     const { sun, mon, tue, wed, thu, fri, sat, selectedDay } = this.state;
     return (
@@ -73,6 +86,9 @@ export default class App extends Component {
             Add your favorite TV shows to keep track of when new episodes air!
           </h2>
           <AddModal addShow={this.addShow} />
+          <button className="btn btn-danger" onClick={this.removeAll}>
+            <b>Remove All Shows</b>
+          </button>
           <div className="row">
             <Days
               days={{ sun, mon, tue, wed, thu, fri, sat }}
