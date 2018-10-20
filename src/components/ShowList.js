@@ -7,8 +7,9 @@ const ShowList = ({ day, shows, handleDelete }) => {
     body = 'Please select a day!';
   } else {
     body =
-      shows.length > 0
-        ? shows.map(show => {
+      shows.length > 0 ? (
+        <ul className="list-group list-group-flush">
+          {shows.map(show => {
             return (
               <TVShow
                 key={show.id}
@@ -17,8 +18,11 @@ const ShowList = ({ day, shows, handleDelete }) => {
                 show={show}
               />
             );
-          })
-        : 'No Shows Set';
+          })}
+        </ul>
+      ) : (
+        'No Shows Set'
+      );
   }
 
   return (
