@@ -42,7 +42,11 @@ export default class App extends Component {
   handleDelete = (day, id) => {
     const filtered = this.state[day].filter(show => show.id !== id);
     this.setState(
-      prevState => ({ ...prevState, [day]: filtered }),
+      prevState => ({
+        ...prevState,
+        [day]: filtered,
+        selectedDay: { ...prevState.selectedDay, shows: filtered },
+      }),
       this.setStorage
     );
   };
