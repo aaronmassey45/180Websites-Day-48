@@ -1,20 +1,30 @@
-import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
+import React from 'react';
 
-export default class TVShow extends Component {
-  handleDelete = (day,title) => {
-    this.props.onDelete(day, title)
-  }
-
-  render() {
-    const { show, day } = this.props;
-    return (
-      <div className='TVShow'>
-        <h3><b>{show.title}</b></h3>
-        <p>Time: {show.time} {show.meridiem}</p>
-        <Button bsStyle="danger" onClick={() => this.handleDelete(day, show.title)}>Delete</Button>
-        <hr/>
+const TVShow = ({
+  show: { title, hour, min, meridiem },
+  day,
+  handleDelete,
+}) => {
+  return (
+    <div className="list-group-item">
+      <h5>
+        <b>{title}</b>
+      </h5>
+      <div className="row">
+        <div className="col-8">
+          Airs at {hour}:{min} {meridiem}.
+        </div>
+        <div className="col-4">
+          <button
+            className="btn btn-sm btn-danger"
+            onClick={() => handleDelete(day, title)}
+          >
+            Delete
+          </button>
+        </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default TVShow;
