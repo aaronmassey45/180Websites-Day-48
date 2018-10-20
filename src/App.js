@@ -52,7 +52,8 @@ export default class App extends Component {
   };
 
   setStorage = () => {
-    localStorage.setItem('_user_shows', JSON.stringify(this.state));
+    const { selectedDay, ...rest } = this.state;
+    localStorage.setItem('_user_shows', JSON.stringify(rest));
   };
 
   selectDay = (dayString, dayObj) => {
