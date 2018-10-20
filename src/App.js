@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import uuidv4 from 'uuid/v4';
 import Navbar from './components/Navbar';
 import Days from './components/Days';
 import AddModal from './components/AddModal';
@@ -32,16 +33,18 @@ export default class App extends Component {
       hour,
       min,
       meridiem,
+      id: uuidv4(),
     });
 
     this.setState({ [day]: shows }, this.setStorage);
   };
 
-  handleDelete = (day, title) => {
-    let on = this.state[day];
-    let index = on.findIndex(x => x.title === title);
-    on.splice(index, 1);
-    this.setState({ [on]: on }, this.setStorage);
+  handleDelete = (day, id) => {
+    const filtered = this.state[day].filter(show => show.id !== id);
+    this.setState(
+      prevState => ({ ...prevState, [day]: filtered }),
+      this.setStorage
+    );
   };
 
   setStorage = () => {
