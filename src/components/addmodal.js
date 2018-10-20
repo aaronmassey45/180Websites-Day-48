@@ -1,145 +1,192 @@
-import React, {Component} from 'react';
-import { Modal, Button, Form, FormGroup, Col, FormControl, ControlLabel } from 'react-bootstrap';
+import React, { Component, Fragment } from 'react';
 
 export default class AddModal extends Component {
-  constructor() {
-    super();
+  state = {
+    title: '',
+    hour: '12',
+    min: '00',
+    meridiem: 'PM',
+    day: 'sun',
+    titleError: '',
+  };
 
-    this.state = {
-      showModal: false,
-      title: '',
-      time: '',
-      meridiem: 'PM',
-      day: 'mon'
-    }
-  }
-
-  close = () => {
-    this.setState({showModal: false});
-  }
-
-  open = () => {
-    this.setState({showModal: true});
-  }
-
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
-    let { day, title, time, meridiem } = this.state;
+    const { day, title, hour, min, meridiem } = this.state;
 
-    if (!/^([0-9]|0[0-9]|1[0-2]):[0-5][0-9]$/.test(time)) {
-      alert("Enter correct time format");
-    } else {
-      this.props.addShow(day, title, time, meridiem);
-      this.setState({
-        showModal: false,
-        title: "",
-        time: ""
-      });
+    if (!title) {
+      this.setState(prevState => ({
+        ...prevState,
+        titleError: 'Please provide a title!',
+      }));
+      return;
     }
 
-  }
+    this.props.addShow({ day, title, hour, min, meridiem });
+    document.querySelector('#close').click();
+    return;
+  };
 
-  titleChange = (e) => {
-    this.setState({ title: e.target.value })
-  }
+  clearForm = () => {
+    this.setState({
+      title: '',
+      hour: '12',
+      min: '00',
+      meridiem: 'PM',
+      day: 'sun',
+      titleError: '',
+    });
+  };
 
-  timeChange = (e) => {
-    this.setState({ time: e.target.value })
-  }
+  handleChange = e => {
+    const error = e.target.id === 'title' ? { titleError: '' } : {};
+    this.setState({ [e.target.id]: e.target.value, ...error });
+  };
 
-  meridiemChange = (e) => {
-    this.setState({ meridiem: e.target.value })
-  }
+  renderTimeOptions = type => {
+    const max = type === 'hour' ? 12 : 59;
+    const options = [];
 
-  dayChange = (e) => {
-    this.setState({ day: e.target.value })
-  }
+    for (let i = 0; i <= max; i++) {
+      const time = type === 'min' && i < 10 ? `0${i}` : i;
+      const option = (
+        <option key={`${time}-${type}`} value={time}>
+          {time}
+        </option>
+      );
+      options.push(option);
+    }
+
+    return options;
+  };
 
   render() {
-    let { showModal, title, time, meridiem, day } = this.state;
+    const { title, hour, min, meridiem, day, titleError } = this.state;
     return (
-      <div className="AddModal">
-        <Button bsStyle="success" onClick={this.open}>Add a Show</Button>
-        <Modal show={showModal} onHide={this.close}>
-          <Modal.Header closeButton>
-            <Modal.Title>Add a Title</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form horizontal onSubmit={this.handleSubmit}>
-              <FormGroup controlId="formHorizontalShow">
-                <Col componentClass={ControlLabel} sm={2}>
-                  Show
-                </Col>
-                <Col sm={10}>
-                  <FormControl
+      <Fragment>
+        <button
+          type="button"
+          className="btn btn-primary my-4"
+          data-toggle="modal"
+          data-target="#addShow"
+        >
+          Add A New Show!
+        </button>
+
+        <div
+          className="modal fade"
+          id="addShow"
+          tabIndex="-1"
+          role="dialog"
+          aria-labelledby="modalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="modalLabel">
+                  Add a show
+                </h5>
+                <button
+                  id="close"
+                  type="button"
+                  className="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                  onClick={this.clearForm}
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <div className="form-group">
+                  <label htmlFor="title">Show Title</label>
+                  <input
                     type="text"
-                    placeholder="Show Title"
-                    onChange={this.titleChange}
+                    className="form-control"
+                    id="title"
+                    placeholder="Enter show title..."
+                    onChange={this.handleChange}
                     value={title}
-                    required
                   />
-                </Col>
-              </FormGroup>
-
-              <FormGroup controlId="formHorizontalTime">
-                <Col componentClass={ControlLabel} sm={2}>
-                  Time
-                </Col>
-                <Col sm={10}>
-                  <FormControl
-                    type="text"
-                    placeholder="hh:mm or h:mm"
-                    onChange={this.timeChange}
-                    value={time}
-                    required
-                  />
-                </Col>
-              </FormGroup>
-
-              <FormGroup>
-                <Col sm={6}>
-                  <Col componentClass={ControlLabel} sm={6}>
-                    AM/PM
-                  </Col>
-                  <Col sm={6}>
-                    <select className="form-control" value={meridiem} onChange={this.meridiemChange}>
-                      <option value="AM">AM</option>
-                      <option value="PM">PM</option>
-                    </select>
-                  </Col>
-                </Col>
-                <Col sm={6}>
-                  <Col componentClass={ControlLabel} sm={4}>
-                    Day
-                  </Col>
-                  <Col sm={8}>
-                    <select className="form-control" value={day} onChange={this.dayChange}>
-                      <option value="mon">Monday</option>
-                      <option value="tue">Tuesday</option>
-                      <option value="wed">Wednesday</option>
-                      <option value="thur">Thursday</option>
-                      <option value="fri">Friday</option>
-                      <option value="sat">Saturday</option>
-                      <option value="sun">Sunday</option>
-                    </select>
-                  </Col>
-                </Col>
-              </FormGroup>
-
-              <FormGroup>
-                <Col smOffset={2} sm={10}>
-                  <Button type="submit">
-                    Add show
-                  </Button>
-                </Col>
-              </FormGroup>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={this.close}>Close</Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
+                  <small className="text-danger">{titleError}</small>
+                </div>
+                <div className="form-group">
+                  <div className="row">
+                    <label className="col-12">Air Time</label>
+                    <div className="col-3">
+                      <select
+                        id="hour"
+                        className="form-control"
+                        onChange={this.handleChange}
+                        value={hour}
+                      >
+                        {this.renderTimeOptions('hour')}
+                      </select>
+                    </div>
+                    <div className="col-1">:</div>
+                    <div className="col-3">
+                      <select
+                        id="min"
+                        className="form-control"
+                        onChange={this.handleChange}
+                        value={min}
+                      >
+                        {this.renderTimeOptions('min')}
+                      </select>
+                    </div>
+                    <div className="col-5">
+                      <select
+                        id="meridiem"
+                        className="form-control"
+                        onChange={this.handleChange}
+                        value={meridiem}
+                      >
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="day">Air Day</label>
+                  <select
+                    className="form-control"
+                    id="day"
+                    value={day}
+                    onChange={this.handleChange}
+                  >
+                    <option value="sun">Sunday</option>
+                    <option value="mon">Monday</option>
+                    <option value="tue">Tuesday</option>
+                    <option value="wed">Wednesday</option>
+                    <option value="thu">Thursday</option>
+                    <option value="fri">Friday</option>
+                    <option value="sat">Saturday</option>
+                  </select>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  data-dismiss="modal"
+                  onClick={this.clearForm}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={this.handleSubmit}
+                >
+                  Add to Schedule
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Fragment>
     );
   }
 }
