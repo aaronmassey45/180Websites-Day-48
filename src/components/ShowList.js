@@ -1,5 +1,5 @@
-import React from 'react';
-import TVShow from './tvshow';
+import React, { Fragment } from 'react';
+import TVShow from './TVShow';
 
 const ShowList = ({ day, shows, handleDelete }) => {
   let body = null;
@@ -8,18 +8,21 @@ const ShowList = ({ day, shows, handleDelete }) => {
   } else {
     body =
       shows.length > 0 ? (
-        <ul className="list-group list-group-flush">
-          {shows.map(show => {
-            return (
-              <TVShow
-                key={show.id}
-                day={day}
-                handleDelete={handleDelete}
-                show={show}
-              />
-            );
-          })}
-        </ul>
+        <Fragment>
+          <h3 className="card-title">{day}</h3>
+          <ul className="list-group list-group-flush">
+            {shows.map(show => {
+              return (
+                <TVShow
+                  key={show.id}
+                  day={day}
+                  handleDelete={handleDelete}
+                  show={show}
+                />
+              );
+            })}
+          </ul>
+        </Fragment>
       ) : (
         'No Shows Set'
       );
