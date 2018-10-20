@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import uuidv4 from 'uuid/v4';
-import Navbar from './components/Navbar';
+
 import Days from './components/Days';
 import AddModal from './components/AddModal';
 import ShowList from './components/ShowList';
@@ -80,7 +80,9 @@ export default class App extends Component {
     const { sun, mon, tue, wed, thu, fri, sat, selectedDay } = this.state;
     return (
       <Fragment>
-        <Navbar />
+        <nav className="navbar navbar-dark bg-dark">
+          <span className="navbar-brand mb-0 h1 mx-auto">TV Show Reminder</span>
+        </nav>
         <div className="container">
           <h2 className="my-2">
             Add your favorite TV shows to keep track of when new episodes air!
