@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react';
-import Navbar from './Navbar';
-import Days from './Days';
-import AddModal from './AddModal';
-import ShowList from './showlist';
+import Navbar from './components/Navbar';
+import Days from './components/Days';
+import AddModal from './components/AddModal';
+import ShowList from './components/ShowList';
 
-import '../App.css';
+import './App.css';
 
 export default class App extends Component {
   constructor(props) {
