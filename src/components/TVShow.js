@@ -1,7 +1,7 @@
 import React from 'react';
 
 const TVShow = ({
-  show: { title, hour, min, meridiem },
+  show: { title, hour, min, meridiem, id },
   day,
   handleDelete,
 }) => {
@@ -17,7 +17,7 @@ const TVShow = ({
         <div className="col-4">
           <button
             className="btn btn-sm btn-danger"
-            onClick={() => handleDelete(day, title)}
+            onClick={() => handleDelete(day.toLowerCase().substr(0, 3), id)}
           >
             Delete
           </button>
